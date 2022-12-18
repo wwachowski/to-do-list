@@ -1,0 +1,5 @@
+<div style="border:1px solid black">
+    <div>Title: {{this.todo.title}}</div>
+    <div>Time: {{this.todo.date | date:'shortTime'}}</div>
+    <div *ngIf="this.todo.desc">Desc: {{this.todo.desc}}</div>
+</div>

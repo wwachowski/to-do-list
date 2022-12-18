@@ -15,10 +15,10 @@ export class HomeComponent implements OnInit {
   constructor(private _todos: TodosService) { }
 
   ngOnInit(): void {
-    this.displayTodosByDate(new Date(), 'week');
+    this._getTodosByDate(new Date(), 'week');
   }
 
-  displayTodosByDate(date: Date, period: 'week' | 'day') {
+  private _getTodosByDate(date: Date, period: 'week' | 'day') {
     let data: Observable<Todo[] | undefined> = of([]);
     if (period === 'week') {
       data = this._todos.getByWeek(date);

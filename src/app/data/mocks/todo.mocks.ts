@@ -5,7 +5,7 @@ export const TODOS: Todo[] = [
         id: 1,
         userId: 1,
         title: 'Do laundry',
-        date: new Date(),
+        date: new Date('2022-12-16'),
         done: false
     },
     {
@@ -14,14 +14,14 @@ export const TODOS: Todo[] = [
         title: 'Create real backend',
         date: new Date(),
         done: false,
-        desc: 'also provide real http functionality!',
+        desc: 'also provide real http functionallity!',
         section: 'ToDo list'
     },
     {
         id: 3,
         userId: 1,
         title: 'Buy gifts for Thomas and Jeremy',
-        date: new Date(),
+        date: new Date('2022-12-14'),
         done: false,
         section: 'Christmas!'
     }

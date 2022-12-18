@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+    </tr>
+    <tr>
+        <td *ngFor="let day of this.wrappedTodoList;let i=index">
+            <app-todo-card  [todo]="todo" *ngFor="let todo of this.wrappedTodoList[i]"></app-todo-card>
+        </td>
+    </tr>
+</table>
