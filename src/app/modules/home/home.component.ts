@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { Todo } from 'src/app/data/models/todo';
 import { TodosService } from 'src/app/services/todos.service';
 
@@ -8,33 +8,34 @@ import { TodosService } from 'src/app/services/todos.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public displayMode!: string;
-  public todos: Todo[] | undefined;
+  public todos!: Todo[];
+  private data$!: Observable<Todo[]>;
+  private destroyer$ = new Subject<void>();
 
   constructor(private _todos: TodosService) { }
 
   ngOnInit(): void {
-    this._getTodosByDate(new Date(), 'week');
+    this._setTodosByDate(new Date(), 'week');
   }
 
-  private _getTodosByDate(date: Date, period: 'week' | 'day') {
-    let data: Observable<Todo[] | undefined> = of([]);
-    if (period === 'week') {
-      data = this._todos.getByWeek(date);
-      this.displayMode = 'week';
-    }
-    if (period === 'day') {
-      data = this._todos.getByDay(date);
-      this.displayMode = 'day';
-    }
-    data.subscribe({
-      error: (err) => {
-        console.log(err);
-      },
-      next: (res) => {
-        this.todos = res ? res : [];
-      }
-    })
+  ngOnDestroy(): void {
+    this.destroyer$.next();
+    this.destroyer$.complete();
+  }
+
+  private _setTodosByDate(date: Date, period: 'week' | 'day'): void {
+    this.data$ = (period === 'week')
+      ? this._todos.getByWeek(date) : this._todos.getByDay(date);
+    this.displayMode = period;
+
+    this.data$.pipe(
+      takeUntil(this.destroyer$),
+      catchError(err => {
+        console.error(err);
+        return of([]);
+      })
+    ).subscribe(res => this.todos = res);
   }
 }

@@ -1,6 +1,8 @@
-<div *ngIf="this.displayMode==='week'">
-    <app-todos-week [todoList]="this.todos"></app-todos-week>
-</div>
-<div *ngIf="this.displayMode==='day'">
-    <!-- TODO: create display mode for one day -->
-</div>
+<ng-container [ngSwitch]="displayMode">
+    <ng-container *ngSwitchCase="'week'">
+        <app-todos-week [todoList]="todos"></app-todos-week>
+    </ng-container>
+    <ng-container *ngSwitchCase="'day'">
+        <!-- TODO: create display mode for one day -->
+    </ng-container>
+</ng-container>

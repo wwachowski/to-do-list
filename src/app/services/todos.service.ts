@@ -10,19 +10,19 @@ export class TodosService {
 
   constructor() { }
 
-  getByWeek(date: Date): Observable<Todo[] | undefined> {
+  public getByWeek(date: Date): Observable<Todo[]> {
     return of(TODOS);
   }
 
-  getByDay(date: Date): Observable<Todo[] | undefined> {
+  public getByDay(date: Date): Observable<Todo[]> {
     return of(TODOS);
   }
 
-  add(todo: Todo): void {
+  public add(todo: Todo): void {
     TODOS.push(todo);
   }
 
-  delete(todoId: number): void {
-    TODOS.filter(todo => todo.id != todoId);
+  public delete(todoId: number): void {
+    TODOS.filter(todo => todo.id !== todoId);
   }
 }
