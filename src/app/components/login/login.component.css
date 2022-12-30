@@ -1,0 +1,9 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 20em;
+}
+
+.error-wrapper app-form-error:not(:first-child) {
+    display: none;
+}
