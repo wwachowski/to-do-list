@@ -1,47 +1,35 @@
-<div>
-    <form class="form" [formGroup]="user" (ngSubmit)="onSubmit()">
-        <label for="name">Provide username</label>
-        <input id="name" type="text" formControlName="name">
-        <div class="error-wrapper" *ngIf="user.get('name')?.errors 
-            && (user.get('name')?.touched || user.get('name')?.dirty)">
-            <app-form-error
-                *ngIf="user.get('name')?.hasError('required')" 
-                [text]="'Name is required'">
-            </app-form-error>
-            <app-form-error
-                *ngIf="user.get('name')?.hasError('pattern')" 
-                [text]="'Name should not contain whitespaces'">
-            </app-form-error>
-            <app-form-error
-                *ngIf="user.get('name')?.hasError('uniqueName')" 
-                [text]="'User name is already taken'">
-            </app-form-error>
+<form class="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+        <mat-label>Provide user name</mat-label>
+        <input matInput type="text" formControlName="name">
+        <div class="error-wrapper" *ngIf="userForm.get('name')?.errors 
+        && (userForm.get('name')?.touched || userForm.get('name')?.dirty)">
+            <mat-error *ngIf="userForm.get('name')?.hasError('required')">Name is required</mat-error>
+            <mat-error *ngIf="userForm.get('name')?.hasError('pattern')">Name should not contain whitespaces</mat-error>
+            <mat-error *ngIf="userForm.get('name')?.hasError('uniqueName')">Username is already taken</mat-error>
         </div>
+    </mat-form-field>
 
-        <label for="pass">Type password</label>
-        <input id="pass" type="password" formControlName="password">
-        <div class="error-wrapper" *ngIf="user.get('password')?.errors 
-        && (user.get('password')?.touched || user.get('password')?.dirty)">
-            <app-form-error
-                *ngIf="user.get('password')?.hasError('required')" 
-                [text]="'Password is required'">
-            </app-form-error>
+    <mat-form-field appearance="outline">
+        <mat-label>Type password</mat-label>
+        <input matInput type="password" formControlName="pswd">
+        <div class="error-wrapper" *ngIf="userForm.get('pswd')?.errors 
+        && (userForm.get('pswd')?.touched || userForm.get('pswd')?.dirty)">
+            <mat-error *ngIf="userForm.get('pswd')?.hasError('required')">Password is required</mat-error>
+            <mat-error *ngIf="userForm.get('pswd')?.hasError('pattern')">Password should not contain whitespaces</mat-error>
         </div>
+    </mat-form-field>
 
-        <label for="passRetype">Retype password</label>
-        <input id="passRetype" type="password" formControlName="passwordRetype">
-        <div class="error-wrapper" *ngIf="user.errors 
-        && (user.get('passwordRetype')?.touched || user.get('passwordRetype')?.dirty)">
-            <app-form-error
-                *ngIf="user.get('passwordRetype')?.hasError('required')" 
-                [text]="'Password confirmation is required'">
-            </app-form-error>
-            <app-form-error
-                *ngIf="user.hasError('matchedPasswords')" 
-                [text]="'Passwords do not match'">
-            </app-form-error>
+    <mat-form-field appearance="outline">
+        <mat-label>Retype password</mat-label>
+        <input matInput type="password" formControlName="pswdRetype">
+        <div class="error-wrapper" *ngIf="userForm.errors 
+        && (userForm.get('pswdRetype')?.touched || userForm.get('pswdRetype')?.dirty)">
+            <mat-error *ngIf="userForm.get('pswdRetype')?.hasError('required')">Password confirmation is required</mat-error>
+            <mat-error *ngIf="userForm.hasError('matchedPasswords')">Passwords do not match</mat-error>
         </div>
+    </mat-form-field>
 
-        <button type="submit">Submit</button>
-    </form>
-</div>
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+    <a routerLink="/login">Log In</a>
+</form>

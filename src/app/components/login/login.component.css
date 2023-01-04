@@ -1,9 +1,13 @@
 .form {
+    position: fixed;
     display: flex;
     flex-direction: column;
     width: 20em;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-.error-wrapper app-form-error:not(:first-child) {
+.error-wrapper mat-error:not(:first-child) {
     display: none;
 }

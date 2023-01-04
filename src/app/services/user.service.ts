@@ -8,7 +8,7 @@ export class UserService {
 
   constructor() { }
 
-  public doesUserExists(username: string): Observable<any> {
+  public doesUserExists(username: string): Observable<boolean> {
     return of(false);
   }
 }

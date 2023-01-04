@@ -10,36 +10,41 @@ import { matchingPasswordsValidator } from 'src/app/shared/validators/validators
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  public user = new FormGroup({
-    name: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.pattern(/^\S*$/)
-      ],
-      asyncValidators: [
-        this._uniqueNameValidator.validate.bind(this._uniqueNameValidator)
-      ],
-      updateOn: 'blur'
-    }),
-    password: new FormControl('', {
-      validators: [
-        Validators.required
-      ],
-      updateOn: 'blur'
-    }),
-    passwordRetype: new FormControl('', {
-      validators: [
-        Validators.required
-      ],
-      updateOn: 'blur'
-    })
-  }, { validators: matchingPasswordsValidator });
+  public userForm = this.createForm();
 
   constructor(private _uniqueNameValidator: UniqueNameValidator) { }
 
   public onSubmit() {
-    if (this.user.valid) {
+    if (this.userForm.valid) {
       //perform actual HTTP
     }
+  }
+
+  private createForm(): FormGroup {
+    return new FormGroup({
+      name: new FormControl('', {
+        validators: [
+          Validators.required,
+          Validators.pattern(/^\S*$/)
+        ],
+        asyncValidators: [
+          this._uniqueNameValidator.validate.bind(this._uniqueNameValidator)
+        ],
+        updateOn: 'blur'
+      }),
+      pswd: new FormControl('', {
+        validators: [
+          Validators.required,
+          Validators.pattern(/^\S*$/)
+        ],
+        updateOn: 'blur'
+      }),
+      pswdRetype: new FormControl('', {
+        validators: [
+          Validators.required
+        ],
+        updateOn: 'blur'
+      })
+    }, { validators: matchingPasswordsValidator });
   }
 }
