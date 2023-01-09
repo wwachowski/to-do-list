@@ -1,23 +1,22 @@
 <form class="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="error-wrapper" *ngIf="userForm.get('name')?.errors 
+        && (userForm.get('name')?.touched || userForm.get('name')?.dirty)">
+        <mat-error *ngIf="userForm.get('name')?.hasError('required')">Name is required</mat-error>
+        <mat-error *ngIf="userForm.get('name')?.hasError('pattern')">Name should not contain whitespaces</mat-error>
+    </div>
     <mat-form-field appearance="outline">
         <mat-label>Type user name</mat-label>
         <input matInput type="text" formControlName="name">
-        
     </mat-form-field>
-    <div class="error-wrapper" *ngIf="userForm.get('name')?.errors 
-        && (userForm.get('name')?.touched || userForm.get('name')?.dirty)">
-            <mat-error *ngIf="userForm.get('name')?.hasError('required')">Name is required</mat-error>
-            <mat-error *ngIf="userForm.get('name')?.hasError('pattern')">Name should not contain whitespaces</mat-error>
-    </div>
 
+    <div class="error-wrapper" *ngIf="userForm.get('pswd')?.errors 
+        && (userForm.get('pswd')?.touched || userForm.get('pswd')?.dirty)">
+        <mat-error *ngIf="userForm.get('pswd')?.hasError('required')">Password is required</mat-error>
+        <mat-error *ngIf="userForm.get('pswd')?.hasError('pattern')">Password should not contain whitespaces</mat-error>
+    </div>
     <mat-form-field appearance="outline">
         <mat-label>Type password</mat-label>
         <input matInput type="password" formControlName="pswd">
-        <div class="error-wrapper" *ngIf="userForm.get('pswd')?.errors 
-        && (userForm.get('pswd')?.touched || userForm.get('pswd')?.dirty)">
-            <mat-error *ngIf="userForm.get('pswd')?.hasError('required')">Password is required</mat-error>
-            <mat-error *ngIf="userForm.get('pswd')?.hasError('pattern')">Password should not contain whitespaces</mat-error>
-        </div>
     </mat-form-field>
     
     <button mat-raised-button color="primary" type="submit">Submit</button>

@@ -32,19 +32,22 @@ export class RegisterComponent {
         ],
         updateOn: 'blur'
       }),
-      pswd: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.pattern(/^\S*$/)
-        ],
-        updateOn: 'blur'
-      }),
-      pswdRetype: new FormControl('', {
-        validators: [
-          Validators.required
-        ],
-        updateOn: 'blur'
+      passwords: new FormGroup({
+        pswd: new FormControl('', {
+          validators: [
+            Validators.required,
+            Validators.pattern(/^\S*$/)
+          ],
+          updateOn: 'blur'
+        }),
+        pswdRetype: new FormControl('', {
+          validators: [
+            Validators.required,
+            matchingPasswordsValidator
+          ],
+          updateOn: 'blur'
+        })
       })
-    }, { validators: matchingPasswordsValidator });
+    });
   }
 }

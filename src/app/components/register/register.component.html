@@ -1,34 +1,36 @@
 <form class="form" [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline">
+    <div class="error-wrapper" *ngIf="userForm.get('name')?.errors 
+    && (userForm.get('name')?.touched || userForm.get('name')?.dirty)">
+        <mat-error *ngIf="userForm.get('name')?.hasError('required')">Name is required</mat-error>
+        <mat-error *ngIf="userForm.get('name')?.hasError('pattern')">Name should not contain whitespaces</mat-error>
+        <mat-error *ngIf="userForm.get('name')?.hasError('uniqueName')">Username is already taken</mat-error>
+    </div>
+    <mat-form-field appearance="outline" mat>
         <mat-label>Provide user name</mat-label>
         <input matInput type="text" formControlName="name">
-        <div class="error-wrapper" *ngIf="userForm.get('name')?.errors 
-        && (userForm.get('name')?.touched || userForm.get('name')?.dirty)">
-            <mat-error *ngIf="userForm.get('name')?.hasError('required')">Name is required</mat-error>
-            <mat-error *ngIf="userForm.get('name')?.hasError('pattern')">Name should not contain whitespaces</mat-error>
-            <mat-error *ngIf="userForm.get('name')?.hasError('uniqueName')">Username is already taken</mat-error>
-        </div>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Type password</mat-label>
-        <input matInput type="password" formControlName="pswd">
-        <div class="error-wrapper" *ngIf="userForm.get('pswd')?.errors 
-        && (userForm.get('pswd')?.touched || userForm.get('pswd')?.dirty)">
-            <mat-error *ngIf="userForm.get('pswd')?.hasError('required')">Password is required</mat-error>
-            <mat-error *ngIf="userForm.get('pswd')?.hasError('pattern')">Password should not contain whitespaces</mat-error>
+    <div formGroupName="passwords">
+        <div class="error-wrapper" *ngIf="userForm.get('passwords')?.get('pswd')?.errors 
+        && (userForm.get('passwords')?.get('pswd')?.touched || userForm.get('passwords')?.get('pswd')?.dirty)">
+            <mat-error *ngIf="userForm.get('passwords')?.get('pswd')?.hasError('required')">Password is required</mat-error>
+            <mat-error *ngIf="userForm.get('passwords')?.get('pswd')?.hasError('pattern')">Password should not contain whitespaces</mat-error>
         </div>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Type password</mat-label>
+            <input matInput type="password" formControlName="pswd">
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-        <mat-label>Retype password</mat-label>
-        <input matInput type="password" formControlName="pswdRetype">
-        <div class="error-wrapper" *ngIf="userForm.errors 
-        && (userForm.get('pswdRetype')?.touched || userForm.get('pswdRetype')?.dirty)">
-            <mat-error *ngIf="userForm.get('pswdRetype')?.hasError('required')">Password confirmation is required</mat-error>
-            <mat-error *ngIf="userForm.hasError('matchedPasswords')">Passwords do not match</mat-error>
+        <div class="error-wrapper" *ngIf="userForm.get('passwords')?.get('pswdRetype')?.errors
+        && (userForm.get('passwords')?.get('pswdRetype')?.touched || userForm.get('passwords')?.get('pswdRetype')?.dirty)">
+            <mat-error *ngIf="userForm.get('passwords')?.get('pswdRetype')?.hasError('required')">Password confirmation is required</mat-error>
+            <mat-error *ngIf="userForm.get('passwords')?.get('pswdRetype')?.hasError('matchedPasswords')">Passwords do not match</mat-error>
         </div>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Retype password</mat-label>
+            <input matInput type="password" formControlName="pswdRetype">
+        </mat-form-field>
+    </div>
 
     <button mat-raised-button color="primary" type="submit">Submit</button>
     <a routerLink="/login">Log In</a>
