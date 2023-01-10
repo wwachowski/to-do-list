@@ -1,5 +1,7 @@
-<div style="border:1px solid black">
-    <div>Title: {{this.todo.title}}</div>
-    <div>Time: {{this.todo.date | date:'shortTime'}}</div>
-    <div *ngIf="this.todo.desc">Desc: {{this.todo.desc}}</div>
-</div>
+<mat-card matRipple>
+    <mat-card-header>
+        <mat-card-title>{{this.todo.title}}</mat-card-title>
+        <mat-card-subtitle>{{this.todo.date | date:'shortTime'}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngIf="this.todo.desc">{{this.todo.desc}}</mat-card-content>
+</mat-card>

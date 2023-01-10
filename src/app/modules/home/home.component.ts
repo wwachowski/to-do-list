@@ -9,7 +9,6 @@ import { TodosService } from 'src/app/services/todos.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  public displayMode!: string;
   public todos!: Todo[];
   private data$!: Observable<Todo[]>;
   private destroyer$ = new Subject<void>();
@@ -28,7 +27,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   private _setTodosByDate(date: Date, period: 'week' | 'day'): void {
     this.data$ = (period === 'week')
       ? this._todos.getByWeek(date) : this._todos.getByDay(date);
-    this.displayMode = period;
 
     this.data$.pipe(
       takeUntil(this.destroyer$),

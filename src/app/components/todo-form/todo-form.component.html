@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Task edit</h2>
+<mat-dialog-content>
+  <form class="form" [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input matInput type="text" formControlName="title">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="desc" rows="2" maxlength="250"></textarea>
+    </mat-form-field>
+
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Time</mat-label>
+        <mat-hint>ex. 1:00</mat-hint>
+        <input matInput type="text" formControlName="time">
+      </mat-form-field>
+    </div>
+
+  </form>
+  <span class="error-message" *ngIf="todoForm.invalid && submitted">Form is invalid</span>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()">Apply</button>
+</mat-dialog-actions>

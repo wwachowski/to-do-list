@@ -1,0 +1,13 @@
+.flex {
+    display: flex;
+}
+
+.side-bar {
+    width: 15%;
+    height: 100vh;
+    background-color: azure;
+}
+
+.main {
+    width: 70%;
+}

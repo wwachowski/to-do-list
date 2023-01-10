@@ -24,5 +24,14 @@ export const TODOS: Todo[] = [
         date: new Date('2022-12-14'),
         done: false,
         section: 'Christmas!'
+    },
+    {
+        id: 4,
+        userId: 1,
+        title: 'New task',
+        date: new Date(),
+        done: false,
+        desc: 'Another task!',
+        section: 'ToDo list'
     }
 ];

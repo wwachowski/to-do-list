@@ -1,0 +1,25 @@
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.weekday {
+    text-align: center;
+    font-weight: 700;
+    font-size: larger;
+}
+
+.column:not(:last-child) {
+    -webkit-box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
+    box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
+}
+
+app-todo-card {
+    margin: 7.5px;
+}

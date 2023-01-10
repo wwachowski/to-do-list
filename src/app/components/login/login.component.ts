@@ -1,4 +1,4 @@
-import { Component, createPlatform } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 

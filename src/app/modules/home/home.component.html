@@ -1,8 +1,12 @@
-<ng-container [ngSwitch]="displayMode">
-    <ng-container *ngSwitchCase="'week'">
-        <app-todos-week [todoList]="todos"></app-todos-week>
-    </ng-container>
-    <ng-container *ngSwitchCase="'day'">
-        <!-- TODO: create display mode for one day -->
-    </ng-container>
-</ng-container>
+<div class="flex">
+    <div class="side-bar side-bar-left"></div>
+    <div class="main">
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+            <mat-tab label="Week">
+                <app-todos-week [todoList]="todos"></app-todos-week>
+            </mat-tab>
+            <mat-tab label="Day">Day content will be here.</mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="side-bar side-bar-left"></div>
+</div>

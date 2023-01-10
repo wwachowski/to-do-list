@@ -1,0 +1,16 @@
+textarea {
+    max-height: 10rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.error-message {
+    color: red;
+}
