@@ -1,23 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 import { UniqueNameValidator } from 'src/app/shared/validators/async/unique-name-validator';
-import { matchingPasswordsValidator } from 'src/app/shared/validators/validators';
+import { matchingValuesValidator } from 'src/app/shared/validators/validators';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
-  public userForm = this.createForm();
+export class RegisterComponent implements OnInit, OnDestroy {
+  public userForm!: FormGroup;
+  private unsub$ = new Subject<void>();
 
   constructor(private _uniqueNameValidator: UniqueNameValidator) { }
 
-  public onSubmit() {
-    if (this.userForm.valid) {
-      //perform actual HTTP
-    }
+  ngOnInit(): void {
+    this.userForm = this.createForm();
+
+    this.userForm.get('passwords')?.get('pswdRetype')?.addValidators(
+      matchingValuesValidator(this.userForm?.get('passwords')?.get('pswd'))
+    );
+
+    this.userForm.get('passwords')?.get('pswd')?.valueChanges.pipe(
+      takeUntil(this.unsub$)
+    ).subscribe(_ => {
+      this.userForm.get('passwords')?.get('pswdRetype')?.updateValueAndValidity();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsub$.next();
+    this.unsub$.complete();
+  }
+
+  public onSubmit(): void {
+    if (this.userForm.invalid) return;
+    //perform actual HTTP
   }
 
   private createForm(): FormGroup {
@@ -29,25 +49,21 @@ export class RegisterComponent {
         ],
         asyncValidators: [
           this._uniqueNameValidator.validate.bind(this._uniqueNameValidator)
-        ],
-        updateOn: 'blur'
+        ]
       }),
       passwords: new FormGroup({
         pswd: new FormControl('', {
           validators: [
             Validators.required,
             Validators.pattern(/^\S*$/)
-          ],
-          updateOn: 'blur'
+          ]
         }),
         pswdRetype: new FormControl('', {
           validators: [
-            Validators.required,
-            matchingPasswordsValidator
-          ],
-          updateOn: 'blur'
+            Validators.required
+          ]
         })
       })
-    });
+    }, { updateOn: 'blur' });
   }
 }

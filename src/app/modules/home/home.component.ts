@@ -9,9 +9,9 @@ import { TodosService } from 'src/app/services/todos.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  public todos!: Todo[];
-  private data$!: Observable<Todo[]>;
-  private destroyer$ = new Subject<void>();
+  public todos!: Array<Todo>;
+  private data$!: Observable<Array<Todo>>;
+  private unsub$ = new Subject<void>();
 
   constructor(private _todos: TodosService) { }
 
@@ -20,8 +20,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroyer$.next();
-    this.destroyer$.complete();
+    this.unsub$.next();
+    this.unsub$.complete();
   }
 
   private _setTodosByDate(date: Date, period: 'week' | 'day'): void {
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       ? this._todos.getByWeek(date) : this._todos.getByDay(date);
 
     this.data$.pipe(
-      takeUntil(this.destroyer$),
+      takeUntil(this.unsub$),
       catchError(err => {
         console.error(err);
         return of([]);

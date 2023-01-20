@@ -14,3 +14,7 @@ textarea {
 .error-message {
     color: red;
 }
+
+textarea {
+    overflow: hidden;
+}

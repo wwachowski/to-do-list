@@ -8,12 +8,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  public userForm = this.createForm();
+  public userForm: FormGroup = this.createForm();
 
-  public onSubmit() {
-    if (this.userForm.valid) {
-      //perform actual HTTP
-    }
+  public onSubmit(): void {
+    if (this.userForm.invalid) return;
+    //perform actual HTTP
   }
 
   private createForm(): FormGroup {
@@ -22,16 +21,14 @@ export class LoginComponent {
         validators: [
           Validators.required,
           Validators.pattern(/^\S*$/)
-        ],
-        updateOn: 'blur'
+        ]
       }),
       pswd: new FormControl('', {
         validators: [
           Validators.required,
           Validators.pattern(/^\S*$/)
-        ],
-        updateOn: 'blur'
+        ]
       })
-    });
+    }, { updateOn: 'blur' });
   }
 }

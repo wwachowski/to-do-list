@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Todo } from '../../data/models/todo';
 import { MatDialog } from '@angular/material/dialog';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
-import { Subject, catchError, of, takeUntil } from 'rxjs';
+import { Subject, catchError, filter, of, pipe, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-todos-week',
@@ -12,47 +12,52 @@ import { Subject, catchError, of, takeUntil } from 'rxjs';
 
 export class TodosWeekComponent implements OnInit, OnDestroy {
 
-  @Input() todoList: Todo[] | undefined;
-  public wrappedTodoList: Todo[][] = [[], [], [], [], [], [], []];
-  public weekDayNames: string[] = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
-  private destroyer$ = new Subject<void>();
+  @Input() todoList: Array<Todo> | undefined;
+  public wrappedTodoList: Array<Array<Todo>> = [[], [], [], [], [], [], []];
+  public weekDayNames: Array<string> = [];
+  private unsub$ = new Subject<void>();
 
   constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this._wrapTodoList();
+    this._setWeekDays();
   }
 
   ngOnDestroy(): void {
-    this.destroyer$.next();
-    this.destroyer$.complete();
+    this.unsub$.next();
+    this.unsub$.complete();
   }
 
   public displayDialog(data: Todo): void {
     this.dialog.open(TodoFormComponent, {
       data: data
     }).afterClosed().pipe(
-      takeUntil(this.destroyer$),
+      takeUntil(this.unsub$),
       catchError(err => {
         console.error(err);
         return of(null);
-      })).subscribe(data => {
-        if (data) {
-          // TODO: Update todo list by actual HTTP
-          // also refresh data
-        }
+      })).
+      pipe(filter(todo => !!todo))
+      .subscribe(data => {
+        // TODO: Update todo list by actual HTTP
+        // also refresh data
       })
   }
 
-  private _wrapTodoList() {
+  private _setWeekDays(): void {
+    const date = new Date('01/04/1970');
+    for (let i = 0; i < 7; i++) {
+      this.weekDayNames.push(this._getWeekDay(date, 1));
+    }
+  }
+
+  private _getWeekDay(date: Date, offset?: number, lang?: string): string {
+    return new Date(date.setDate(date.getDate() + (offset ?? 0)))
+      .toLocaleString(lang ?? 'default', { weekday: 'short' });
+  }
+
+  private _wrapTodoList(): void {
     this.todoList?.forEach(todo => {
       const day: number = this._getWeekDayIndex(todo.date);
       this.wrappedTodoList[day].push(todo);

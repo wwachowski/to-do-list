@@ -1,8 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export const matchingPasswordsValidator: ValidatorFn = (control: AbstractControl):
-    ValidationErrors | null => {
-    const pswd = control.get('pswd');
-    const pswdRetype = control.get('pswdRetype');
-    return pswd && pswdRetype && pswd.value === pswdRetype.value ? null : { matchedPasswords: true };
+export function matchingValuesValidator(controlToCompare: AbstractControl | null | undefined):
+    ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        return control && controlToCompare && control.value === controlToCompare.value
+            ? null : { matchedPasswords: true };
+    }
 }
