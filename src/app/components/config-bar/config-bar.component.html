@@ -1,0 +1,20 @@
+<form [formGroup]="configForm">
+    <mat-form-field appearance="fill">
+        <input matInput [matDatepicker]="picker" formControlName="date" readonly>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-button-toggle-group formControlName="sortOpt">
+        <mat-button-toggle value="asc">
+            <mat-icon>arrow_downward</mat-icon>
+            <mat-icon>calendar_today</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="desc">
+            <mat-icon>arrow_upward</mat-icon>
+            <mat-icon>calendar_today</mat-icon>
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-slide-toggle formControlName="showDone">Show completed</mat-slide-toggle>
+</form>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { Todo } from 'src/app/data/models/todo';
+import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
 import { TodosService } from 'src/app/services/todos.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { TodosService } from 'src/app/services/todos.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public todos!: Array<Todo>;
+  public rangeDate: Date = new Date();
   private data$!: Observable<Array<Todo>>;
   private unsub$ = new Subject<void>();
 
@@ -35,5 +37,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         return of([]);
       })
     ).subscribe(res => this.todos = res);
+  }
+
+  public setConfig(config: TodoViewConfig): void {
+    console.log(config);
+    // TODO: Handle TodoViewConfig
   }
 }

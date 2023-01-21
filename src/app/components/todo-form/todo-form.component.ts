@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Todo } from 'src/app/data/models/todo';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -15,6 +16,7 @@ export class TodoFormComponent {
 
   constructor(
     private _dialogRef: MatDialogRef<TodoFormComponent>,
+    private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public todo: Todo
   ) { }
 
@@ -22,6 +24,7 @@ export class TodoFormComponent {
     this.submitted = true;
     if (this.todoForm.invalid) return;
     this._updateTodo();
+    this._snackBar.open('Todo has been successfully edited!', 'Okay', { duration: 2000 });
     this._dialogRef.close(this.todo);
   }
 
@@ -63,11 +66,7 @@ export class TodoFormComponent {
           Validators.pattern(/^(([0-9]{1})|([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1}))(([:]{1})?)(([0-5]{1}[0-9]?)?)$/)
         ]
       }),
-      section: new FormControl(this.todo.section, {
-        validators: [
-          Validators.required
-        ]
-      })
+      section: new FormControl(this.todo.section, {})
     });
   }
 }

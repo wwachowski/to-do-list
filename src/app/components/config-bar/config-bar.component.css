@@ -1,0 +1,14 @@
+mat-button-toggle {
+    padding-top: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mat-icon {
+    font-size: 18px;
+}
+
+mat-form-field {
+    font-size: 15px;
+}

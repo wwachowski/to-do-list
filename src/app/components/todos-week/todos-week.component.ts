@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Todo } from '../../data/models/todo';
 import { MatDialog } from '@angular/material/dialog';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
-import { Subject, catchError, filter, of, pipe, takeUntil } from 'rxjs';
+import { Subject, catchError, filter, of, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-todos-week',
