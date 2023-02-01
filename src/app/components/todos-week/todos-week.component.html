@@ -1,7 +1,7 @@
 <div class="grid">
-    <div class="column" *ngFor="let day of this.wrappedTodoList;let i=index">
+    <div class="column" *ngFor="let day of wrappedTodoList;let i=index">
         <span class="weekday">{{weekDayNames[i]}}</span>
-        <app-todo-card [todo]="todo" *ngFor="let todo of this.wrappedTodoList[i]"
+        <app-todo-card [todo]="todo" *ngFor="let todo of wrappedTodoList[i]"
             (click)="displayDialog(todo)"></app-todo-card>
     </div>
 </div>

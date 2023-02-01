@@ -17,13 +17,7 @@ export class ConfigBarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.configForm = this.createForm();
-
-    this.configForm.valueChanges.pipe(
-      takeUntil(this.unsub$)
-    ).subscribe(newConfig => {
-      console.log(newConfig)
-      this.newConfigEvent.emit(newConfig);
-    });
+    this._configureForm();
   }
 
   ngOnDestroy(): void {
@@ -36,6 +30,14 @@ export class ConfigBarComponent implements OnInit, OnDestroy {
       date: new FormControl(this.date),
       showDone: new FormControl(false),
       sortOpt: new FormControl('asc')
+    });
+  }
+
+  private _configureForm(): void {
+    this.configForm.valueChanges.pipe(
+      takeUntil(this.unsub$)
+    ).subscribe(newConfig => {
+      this.newConfigEvent.emit(newConfig);
     });
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 import { Todo } from 'src/app/data/models/todo';
 import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
@@ -15,10 +16,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   private data$!: Observable<Array<Todo>>;
   private unsub$ = new Subject<void>();
 
-  constructor(private _todos: TodosService) { }
+  constructor(private _todos: TodosService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this._setTodosByDate(new Date(), 'week');
+    // this._snackBar.open('Todo has been successfully edited!', 'Okay', { duration: 2000 });
   }
 
   ngOnDestroy(): void {

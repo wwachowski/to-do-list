@@ -17,6 +17,20 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(private _uniqueNameValidator: UniqueNameValidator) { }
 
   ngOnInit(): void {
+    this.configureUserForm();
+  }
+
+  ngOnDestroy(): void {
+    this.unsub$.next();
+    this.unsub$.complete();
+  }
+
+  public onSubmit(): void {
+    if (this.userForm.invalid) return;
+    //perform actual HTTP
+  }
+
+  private configureUserForm(): void {
     this.userForm = this.createForm();
 
     this.userForm.get('passwords')?.get('pswdRetype')?.addValidators(
@@ -28,16 +42,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     ).subscribe(_ => {
       this.userForm.get('passwords')?.get('pswdRetype')?.updateValueAndValidity();
     });
-  }
-
-  ngOnDestroy(): void {
-    this.unsub$.next();
-    this.unsub$.complete();
-  }
-
-  public onSubmit(): void {
-    if (this.userForm.invalid) return;
-    //perform actual HTTP
   }
 
   private createForm(): FormGroup {

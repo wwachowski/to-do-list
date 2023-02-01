@@ -33,12 +33,12 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
     this.dialog.open(TodoFormComponent, {
       data: data
     }).afterClosed().pipe(
+      filter(todo => !!todo),
       takeUntil(this.unsub$),
       catchError(err => {
         console.error(err);
         return of(null);
-      })).
-      pipe(filter(todo => !!todo))
+      }))
       .subscribe(data => {
         // TODO: Update todo list by actual HTTP
         // also refresh data

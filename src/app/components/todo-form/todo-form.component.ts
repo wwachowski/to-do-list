@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { Todo } from 'src/app/data/models/todo';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -16,7 +15,6 @@ export class TodoFormComponent {
 
   constructor(
     private _dialogRef: MatDialogRef<TodoFormComponent>,
-    private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public todo: Todo
   ) { }
 
@@ -24,7 +22,6 @@ export class TodoFormComponent {
     this.submitted = true;
     if (this.todoForm.invalid) return;
     this._updateTodo();
-    this._snackBar.open('Todo has been successfully edited!', 'Okay', { duration: 2000 });
     this._dialogRef.close(this.todo);
   }
 
@@ -34,7 +31,7 @@ export class TodoFormComponent {
 
   private _getTime(): string {
     const date = this.todo.date;
-    const hours = date.getHours();
+    const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
     const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     return `${hours}:${minutes}`;
   }
@@ -48,25 +45,35 @@ export class TodoFormComponent {
   }
 
   private _createTodoForm(): FormGroup {
-    return new FormGroup({
-      title: new FormControl(this.todo.title, {
+    const todoForm = new FormGroup({
+      title: new FormControl('', {
         validators: [
           Validators.required
         ]
       }),
-      desc: new FormControl(this.todo.desc, {}),
-      date: new FormControl(this.todo.date, {
+      desc: new FormControl('', {}),
+      date: new FormControl(new Date(), {
         validators: [
           Validators.required
         ]
       }),
-      time: new FormControl(this._getTime(), {
+      time: new FormControl('', {
         validators: [
           Validators.required,
           Validators.pattern(/^(([0-9]{1})|([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1}))(([:]{1})?)(([0-5]{1}[0-9]?)?)$/)
         ]
       }),
-      section: new FormControl(this.todo.section, {})
+      section: new FormControl('', {})
     });
+    
+    todoForm.patchValue({
+      title: this.todo.title,
+      desc: this.todo.desc,
+      date: this.todo.date,
+      time: this._getTime(),
+      section: this.todo.section
+    })
+    
+    return todoForm;
   }
 }
