@@ -10,7 +10,7 @@ import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
   styleUrls: ['./config-bar.component.css']
 })
 export class ConfigBarComponent implements OnInit, OnDestroy {
-  @Input() date!: Date;
+  @Input() config!: TodoViewConfig;
   @Output() newConfigEvent = new EventEmitter<TodoViewConfig>();
   public configForm!: FormGroup;
   private unsub$ = new Subject<void>();
@@ -26,10 +26,10 @@ export class ConfigBarComponent implements OnInit, OnDestroy {
   }
 
   private createForm(): FormGroup {
-    return this.configForm = new FormGroup({
-      date: new FormControl(this.date),
-      showDone: new FormControl(false),
-      sortOpt: new FormControl('asc')
+    return new FormGroup({
+      date: new FormControl(this.config.date),
+      showDone: new FormControl(this.config.showDone),
+      sortOpt: new FormControl(this.config.sortOpt)
     });
   }
 

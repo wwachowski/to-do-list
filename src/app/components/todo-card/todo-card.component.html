@@ -1,4 +1,4 @@
-<mat-card matRipple>
+<mat-card [class.done]="todo.done" matRipple>
     <mat-card-header>
         <mat-card-title>{{todo.title}}</mat-card-title>
         <mat-card-subtitle>{{todo.date | date:'shortTime'}}</mat-card-subtitle>

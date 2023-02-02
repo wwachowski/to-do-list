@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Todo } from '../../data/models/todo';
 import { MatDialog } from '@angular/material/dialog';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
@@ -10,17 +10,23 @@ import { Subject, catchError, filter, of, takeUntil } from 'rxjs';
   styleUrls: ['./todos-week.component.css']
 })
 
-export class TodosWeekComponent implements OnInit, OnDestroy {
+export class TodosWeekComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() todoList: Array<Todo> | undefined;
-  public wrappedTodoList: Array<Array<Todo>> = [[], [], [], [], [], [], []];
+  @Input() showDoneTodos!: boolean;
+  public wrappedTodoList!: Array<Array<Todo>>;
   public weekDayNames: Array<string> = [];
   private unsub$ = new Subject<void>();
 
   constructor(private dialog: MatDialog) { }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    this.wrappedTodoList = [[], [], [], [], [], [], []];
+    if (!this.showDoneTodos) this.todoList = this.todoList?.filter(todo => !todo.done);
     this._wrapTodoList();
+  }
+
+  ngOnInit(): void {
     this._setWeekDays();
   }
 

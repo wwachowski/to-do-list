@@ -1,14 +1,15 @@
 <div class="flex">
     <div class="side-bar side-bar-left"></div>
     <div class="main">
-        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+        <mat-tab-group (selectedTabChange)="onTabChange($event)" mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
             <mat-tab label="Week">
-                <app-todos-week [todoList]="todos"></app-todos-week>
+                <app-todos-week [todoList]="todos" [showDoneTodos]="todoViewConfig.showDone"></app-todos-week>
             </mat-tab>
             <mat-tab label="Day">Day content will be here.</mat-tab>
         </mat-tab-group>
     </div>
     <div class="side-bar side-bar-right">
-        <app-config-bar class="config-bar" [date]="rangeDate" (newConfigEvent)="setConfig($event)"></app-config-bar>
+        <app-config-bar class="config-bar" [config]="todoViewConfig"
+            (newConfigEvent)="updateConfig($event)"></app-config-bar>
     </div>
 </div>

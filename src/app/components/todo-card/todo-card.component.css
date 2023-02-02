@@ -9,3 +9,7 @@ mat-card {
 mat-card-title {
     font-size: 1rem;
 }
+
+.done {
+    background-color: rgb(236, 236, 236);
+}
