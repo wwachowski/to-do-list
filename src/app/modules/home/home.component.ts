@@ -62,6 +62,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         return of([]);
       })
     ).subscribe(res => this.todos = res);
+
+    this._sortTodos(this.todoViewConfig.sortOpt);
   }
 
   public onTabChange(event: MatTabChangeEvent): void {
