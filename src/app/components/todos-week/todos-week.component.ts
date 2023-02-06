@@ -3,17 +3,18 @@ import { Todo } from '../../data/models/todo';
 import { MatDialog } from '@angular/material/dialog';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
 import { Subject, catchError, filter, of, takeUntil } from 'rxjs';
+import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
 
 @Component({
   selector: 'app-todos-week',
   templateUrl: './todos-week.component.html',
-  styleUrls: ['./todos-week.component.css']
+  styleUrls: ['./todos-week.component.scss']
 })
 
 export class TodosWeekComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() todoList: Array<Todo> | undefined;
-  @Input() showDoneTodos!: boolean;
+  @Input() todoViewConfig!: TodoViewConfig;
   public wrappedTodoList!: Array<Array<Todo>>;
   public weekDayNames: Array<string> = [];
   private unsub$ = new Subject<void>();
@@ -22,7 +23,7 @@ export class TodosWeekComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(): void {
     this.wrappedTodoList = [[], [], [], [], [], [], []];
-    if (!this.showDoneTodos) this.todoList = this.todoList?.filter(todo => !todo.done);
+    this._configureTodoList();
     this._wrapTodoList();
   }
 
@@ -49,6 +50,27 @@ export class TodosWeekComponent implements OnInit, OnDestroy, OnChanges {
         // TODO: Update todo list by actual HTTP
         // also refresh data
       })
+  }
+
+  private _configureTodoList(): void {
+    this.todoList = this._filterTodosBySections();
+    if (!this.todoViewConfig.showDone) this.todoList = this.todoList?.filter(todo => !todo.done);
+    this._sortTodos(this.todoViewConfig.sortOpt || 'asc');
+  }
+
+  private _sortTodos(sortOpt: 'asc' | 'desc'): void {
+    this.todoList?.sort((a, b) => {
+      if (a.done !== b.done) return +a.done;
+      const timeDiff = a.date.getTime() - b.date.getTime();
+      return sortOpt === 'asc' ? timeDiff : -timeDiff;
+    });
+  }
+
+  private _filterTodosBySections(): Array<Todo> | undefined {
+    if (!this.todoViewConfig.filterSectionsIDs?.length || !this.todoList?.length) return this.todoList;
+
+    return this.todoList.filter((todo) => (todo.section?.id !== undefined 
+      && this.todoViewConfig.filterSectionsIDs!.includes(todo.section!.id!)));
   }
 
   private _setWeekDays(): void {

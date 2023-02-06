@@ -1,3 +1,5 @@
+import { Section } from "./section";
+
 export interface Todo {
     id: number,
     userId: number,
@@ -5,5 +7,5 @@ export interface Todo {
     date: Date,
     done: boolean,
     desc?: string,
-    section?: string
+    section?: Section
 }

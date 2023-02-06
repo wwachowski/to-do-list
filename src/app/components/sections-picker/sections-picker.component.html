@@ -1,0 +1,25 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Sections
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="item-wrapper" *ngFor="let section of sections">
+      <mat-checkbox [(ngModel)]="section.visible" (ngModelChange)="onCheckboxToggle(section)">
+        {{section.title}}
+      </mat-checkbox>
+      <mat-icon [matMenuTriggerFor]="menuTrigger" [matMenuTriggerData]="{section: section}">mode_edit</mat-icon>
+    </div>
+
+    <button mat-button [matMenuTriggerFor]="menuTrigger" #menuTriggerRef="matMenuTrigger"><mat-icon>add</mat-icon>New section</button>
+
+    <mat-menu #menuTrigger="matMenu">
+      <ng-template matMenuContent let-section="section">
+        <app-section-menu (newSectionEvent)="onEventEmit($event)" [section]="section"></app-section-menu>
+      </ng-template>
+    </mat-menu>
+
+  </mat-expansion-panel>
+</mat-accordion>

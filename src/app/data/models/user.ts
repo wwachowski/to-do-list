@@ -1,6 +1,8 @@
+import { Section } from "./section";
+
 export interface User {
     id: number,
     name: string,
     token: string,
-    sections?: string[]
+    sections: Array<Section>
 }

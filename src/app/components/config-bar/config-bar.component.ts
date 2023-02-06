@@ -7,7 +7,7 @@ import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
 @Component({
   selector: 'app-config-bar',
   templateUrl: './config-bar.component.html',
-  styleUrls: ['./config-bar.component.css']
+  styleUrls: ['./config-bar.component.scss']
 })
 export class ConfigBarComponent implements OnInit, OnDestroy {
   @Input() config!: TodoViewConfig;
@@ -16,7 +16,7 @@ export class ConfigBarComponent implements OnInit, OnDestroy {
   private unsub$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.configForm = this.createForm();
+    this.configForm = this._createForm();
     this._configureForm();
   }
 
@@ -25,7 +25,7 @@ export class ConfigBarComponent implements OnInit, OnDestroy {
     this.unsub$.complete();
   }
 
-  private createForm(): FormGroup {
+  private _createForm(): FormGroup {
     return new FormGroup({
       date: new FormControl(this.config.date),
       showDone: new FormControl(this.config.showDone),

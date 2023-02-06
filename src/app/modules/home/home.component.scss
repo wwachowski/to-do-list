@@ -7,6 +7,11 @@
     height: 100vh;
     background-color: azure;
     position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 8px;
+    padding-top: 30px;
 }
 
 .config-bar {
@@ -24,4 +29,9 @@
 
 .side-bar-right {
     border-left: 1px solid black;
+}
+
+app-sections-picker {
+    margin-top: 3em;
+    max-width: 80%;
 }

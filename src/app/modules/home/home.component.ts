@@ -9,12 +9,12 @@ import { TodosService } from 'src/app/services/todos.service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public todos!: Array<Todo>;
   public todoViewConfig!: TodoViewConfig;
-  private data$!: Observable<Array<Todo>>;
+  private data$?: Observable<Array<Todo>>;
   private unsub$ = new Subject<void>();
 
   constructor(private _todos: TodosService, private _snackBar: MatSnackBar) { }
@@ -22,8 +22,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._configInitialSetup();
     this._setTodos();
-    this._sortTodos(this.todoViewConfig.sortOpt);
-    // this._snackBar.open('Todo has been successfully edited!', 'Okay', { duration: 2000 });
   }
 
   ngOnDestroy(): void {
@@ -31,26 +29,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.unsub$.complete();
   }
 
+  public onTabChange(event: MatTabChangeEvent): void {
+    event.index === 0 ? this.todoViewConfig.period = 'week' : this.todoViewConfig.period = 'day';
+    this._setTodos();
+  }
+
+  public updateConfig(config: TodoViewConfig): void {
+    this.todoViewConfig = {...this.todoViewConfig, ...config};
+    this.todos = [...this.todos];
+  }
+
+  public notify(message: string): void {
+    this._snackBar.open(message, 'Okay', { duration: 2000 });
+  }
+
   private _configInitialSetup(): void {
     this.todoViewConfig = {
       date: new Date(),
       showDone: false,
       sortOpt: 'asc',
-      period: 'week'
+      period: 'week',
+      filterSectionsIDs: []
     };
   }
 
-  private _sortTodos(sortOpt: 'asc' | 'desc'): void {
-    this.todos.sort((a, b) => {
-      if (a.done !== b.done) return +a.done;
-      const timeDiff = a.date.getTime() - b.date.getTime();
-      return sortOpt === 'asc' ? timeDiff : -timeDiff;
-    })
-    this.todos = [...this.todos];
-  }
-
   private _setTodos(): void {
-    const date = this.todoViewConfig.date;
+    const date = this.todoViewConfig.date!;
     const period = this.todoViewConfig.period;
     this.data$ = (period === 'day')
       ? this._todos.getByDay(date) : this._todos.getByWeek(date);
@@ -62,29 +66,5 @@ export class HomeComponent implements OnInit, OnDestroy {
         return of([]);
       })
     ).subscribe(res => this.todos = res);
-
-    this._sortTodos(this.todoViewConfig.sortOpt);
-  }
-
-  public onTabChange(event: MatTabChangeEvent): void {
-    event.index === 0 ? this.todoViewConfig.period = 'week' : this.todoViewConfig.period = 'day';
-    this._setTodos();
-  }
-
-  public updateConfig(config: TodoViewConfig): void {
-    if (this.todoViewConfig.date !== config.date) {
-      this._setTodos();
-      this.todoViewConfig.date = config.date;
-      return;
-    }
-
-    if (this.todoViewConfig.sortOpt !== config.sortOpt) {
-      this.todoViewConfig.sortOpt = config.sortOpt;
-      this._sortTodos(this.todoViewConfig.sortOpt);
-      return;
-    }
-
-    this.todoViewConfig.showDone = config.showDone;
-    this.todos = [...this.todos];
   }
 }

@@ -8,7 +8,7 @@ import { matchingValuesValidator } from 'src/app/shared/validators/validators';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   public userForm!: FormGroup;

@@ -1,0 +1,18 @@
+.item-wrapper {
+  display: flex;
+  align-items: center;
+
+  &:hover mat-icon {
+    display: inline-block;
+  }
+}
+
+mat-icon {
+  display: none;
+  font-size: 20px;
+  margin-left: 5px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

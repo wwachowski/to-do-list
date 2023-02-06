@@ -10,14 +10,12 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LocalStorageService } from './services/local-storage.service';
-import { TodoFormComponent } from './components/todo-form/todo-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent,
-    TodoFormComponent
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

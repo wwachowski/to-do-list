@@ -1,9 +1,11 @@
 <div class="flex">
-    <div class="side-bar side-bar-left"></div>
+    <div class="side-bar side-bar-left">
+        <app-sections-picker (notifyEvent)="notify($event)" (newConfigEvent)="updateConfig($event)"></app-sections-picker>
+    </div>
     <div class="main">
         <mat-tab-group (selectedTabChange)="onTabChange($event)" mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
             <mat-tab label="Week">
-                <app-todos-week [todoList]="todos" [showDoneTodos]="todoViewConfig.showDone"></app-todos-week>
+                <app-todos-week [todoList]="todos" [todoViewConfig]="todoViewConfig"></app-todos-week>
             </mat-tab>
             <mat-tab label="Day">Day content will be here.</mat-tab>
         </mat-tab-group>

@@ -6,7 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-todo-form',
   templateUrl: './todo-form.component.html',
-  styleUrls: ['./todo-form.component.css']
+  styleUrls: ['./todo-form.component.scss']
 })
 export class TodoFormComponent {
 
@@ -63,7 +63,7 @@ export class TodoFormComponent {
           Validators.pattern(/^(([0-9]{1})|([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1}))(([:]{1})?)(([0-5]{1}[0-9]?)?)$/)
         ]
       }),
-      section: new FormControl('', {})
+      section: new FormControl(null, {})
     });
     
     todoForm.patchValue({
@@ -71,7 +71,7 @@ export class TodoFormComponent {
       desc: this.todo.desc,
       date: this.todo.date,
       time: this._getTime(),
-      section: this.todo.section
+      section: null
     })
     
     return todoForm;
