@@ -11,6 +11,7 @@ import { TodoFormComponent } from 'src/app/components/todo-form/todo-form.compon
 import { ConfigBarComponent } from 'src/app/components/config-bar/config-bar.component';
 import { SectionsPickerComponent } from 'src/app/components/sections-picker/sections-picker.component';
 import { SectionMenuComponent } from 'src/app/components/section-menu/section-menu.component';
+import { TodoViewConfigService } from 'src/app/services/todo-view-config.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,9 @@ import { SectionMenuComponent } from 'src/app/components/section-menu/section-me
     MaterialModule,
     FormsModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    TodoViewConfigService
   ]
 })
 export class HomeModule { }

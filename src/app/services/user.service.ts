@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+
 import { Section } from '../data/models/section';
 import { SECTIONS } from '../data/mocks/section.mocks';
 
@@ -15,7 +16,7 @@ export class UserService {
   }
 
   public getSections(): Observable<Array<Section>> {
-    return of(SECTIONS)
+    return of(SECTIONS);
   }
 
   public addSection(section: Section): Observable<boolean> {
