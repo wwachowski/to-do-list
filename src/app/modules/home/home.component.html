@@ -1,10 +1,13 @@
 <div class="flex">
     <div class="side-bar side-bar-left">
-        <button mat-raised-button appearance="fill"><mat-icon>add</mat-icon>Add new task</button>
+        <button mat-raised-button appearance="fill" (click)="displayDialog()">
+            <mat-icon>add</mat-icon>Add new task
+        </button>
         <app-sections-picker></app-sections-picker>
     </div>
     <div class="main">
-        <mat-tab-group (selectedTabChange)="onTabChange($event)" mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+        <mat-tab-group (selectedTabChange)="onTabChange($event)" mat-stretch-tabs="false" mat-align-tabs="start"
+            animationDuration="0ms">
             <mat-tab label="Week">
                 <app-todos-week></app-todos-week>
             </mat-tab>

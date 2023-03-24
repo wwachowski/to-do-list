@@ -9,14 +9,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./todo-form.component.scss']
 })
 export class TodoFormComponent {
-
   public todoForm: FormGroup = this._createTodoForm();
   public submitted: boolean = false;
 
   constructor(
     private _dialogRef: MatDialogRef<TodoFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public todo: Todo
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public todo: Todo) { }
 
   public onSubmit(): void {
     this.submitted = true;
@@ -30,7 +28,7 @@ export class TodoFormComponent {
   }
 
   private _getTime(): string {
-    const date = this.todo.date;
+    const date = this.todo?.date || new Date();
     const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
     const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     return `${hours}:${minutes}`;
@@ -67,9 +65,9 @@ export class TodoFormComponent {
     });
     
     todoForm.patchValue({
-      title: this.todo.title,
-      desc: this.todo.desc,
-      date: this.todo.date,
+      title: this.todo?.title,
+      desc: this.todo?.desc,
+      date: this.todo?.date || new Date(),
       time: this._getTime(),
       section: null
     })
