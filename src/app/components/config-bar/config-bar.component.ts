@@ -48,8 +48,7 @@ export class ConfigBarComponent implements OnInit, OnDestroy {
     this.configForm.valueChanges.pipe(
       takeUntil(this._unsub$)
     ).subscribe(newConfig => {
-      // this._config.sortOpt = newConfig.sortOpt;
-      this._todoViewConfig.setConfig(newConfig);
+      this._todoViewConfig.setConfig({...this._config, ...newConfig});
     });
   }
 }
