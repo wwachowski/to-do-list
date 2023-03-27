@@ -1,26 +1,52 @@
-import { Component, Inject } from '@angular/core';
-import { Todo } from 'src/app/data/models/todo';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subject, catchError, of, takeUntil } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
+import { Todo } from 'src/app/data/models/todo';
+import { Section } from 'src/app/data/models/section';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-todo-form',
   templateUrl: './todo-form.component.html',
   styleUrls: ['./todo-form.component.scss']
 })
-export class TodoFormComponent {
+export class TodoFormComponent implements OnInit, OnDestroy {
   public todoForm: FormGroup = this._createTodoForm();
   public submitted: boolean = false;
+  public sections: Section[] = [];
+  private _unsub$ = new Subject<void>();
 
   constructor(
     private _dialogRef: MatDialogRef<TodoFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public todo: Todo) { }
+    @Inject(MAT_DIALOG_DATA) public todo: Todo,
+    private _user: UserService) { }
+
+  ngOnInit(): void {
+    this._getSections();
+  }
+
+  ngOnDestroy(): void {
+    this._unsub$.next();
+    this._unsub$.complete();
+  }
 
   public onSubmit(): void {
     this.submitted = true;
     if (this.todoForm.invalid) return;
     this._updateTodo();
     this._dialogRef.close(this.todo);
+  }
+
+  private _getSections(): void {
+    this._user.getSections().pipe(
+      takeUntil(this._unsub$),
+      catchError(err => {
+        console.error(err);
+        return of([]);
+      })
+    ).subscribe(res => this.sections = res);
   }
 
   private _combineDateAndTime(date: Date, timeString: string): Date {
@@ -37,8 +63,10 @@ export class TodoFormComponent {
   private _updateTodo(): void {
     const formDate = this.todoForm.get('date')?.value;
     const formTime = this.todoForm.get('time')?.value;
+    const section = this.sections.find(section => section.id === this.todoForm.get('sectionId')?.value);
     this.todo.date = this._combineDateAndTime(formDate, formTime);
-    const { time, date, ...newTodo } = this.todoForm.value;
+    this.todo.section = section;
+    const { time, date, sectionId, ...newTodo } = this.todoForm.value;
     this.todo = { ...this.todo, ...newTodo };
   }
 
@@ -61,17 +89,21 @@ export class TodoFormComponent {
           Validators.pattern(/^(([0-9]{1})|([0-1]{1}[0-9]{1})|([2]{1}[0-3]{1}))(([:]{1})?)(([0-5]{1}[0-9]?)?)$/)
         ]
       }),
-      section: new FormControl(null, {})
+      sectionId: new FormControl(-1, {
+        validators: [
+          Validators.required
+        ]
+      })
     });
-    
+
     todoForm.patchValue({
       title: this.todo?.title,
       desc: this.todo?.desc,
       date: this.todo?.date || new Date(),
       time: this._getTime(),
-      section: null
+      sectionId: this.todo?.section?.id
     })
-    
+
     return todoForm;
   }
 }

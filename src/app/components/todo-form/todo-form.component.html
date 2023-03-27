@@ -21,14 +21,23 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-
       <mat-form-field appearance="fill">
         <mat-label>Time</mat-label>
         <mat-hint>ex. 1:00</mat-hint>
         <input matInput type="time" formControlName="time">
       </mat-form-field>
     </div>
-
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Choose a section</mat-label>
+        <mat-select formControlName="sectionId">
+          <div class="select-options" *ngFor="let section of sections">
+            <!-- compareWith -->
+            <mat-option [value]="section.id">{{section.title}}</mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </form>
   <span class="error-message" *ngIf="todoForm.invalid && submitted">Form is invalid</span>
 </mat-dialog-content>

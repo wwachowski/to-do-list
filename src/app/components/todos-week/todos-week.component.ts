@@ -7,6 +7,7 @@ import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
 import { TodoFormComponent } from '../todo-form/todo-form.component';
 import { TodosService } from 'src/app/services/todos.service';
 import { TodoViewConfigService } from 'src/app/services/todo-view-config.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-todos-week',
@@ -23,7 +24,8 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
   constructor(
     private _dialog: MatDialog,
     private _todos: TodosService,
-    private _todoViewConfig: TodoViewConfigService) {
+    private _todoViewConfig: TodoViewConfigService,
+    private _notification: NotificationService) {
     this._todoViewConfig.config$
       .pipe(takeUntil(this._unsub$))
       .subscribe(newConfig => {
@@ -49,15 +51,21 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
       takeUntil(this._unsub$),
       catchError(err => {
         console.error(err);
+        this._notification.notify('Something went wrong!');
         return of(null);
       }))
       .subscribe(data => {
-        // TODO: Update todo list by actual HTTP
-        // also refresh data
+        this._notification.notify('Successfully updated Todo!');
+        this._updateTodoList(data);
       })
   }
 
-  private _configureTodoList() {
+  private _updateTodoList(data: any) {
+    // TODO: Update todo list by actual HTTP
+    // also refresh data
+  }
+
+  private _configureTodoList(): void {
     this._getTodoList();
     this.wrappedTodoList = [[], [], [], [], [], [], []];
     this._filterTodoList();
