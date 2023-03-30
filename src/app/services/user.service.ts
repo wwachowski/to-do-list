@@ -26,4 +26,8 @@ export class UserService {
   public updateSection(section: Section): Observable<boolean> {
     return of(true);
   }
+
+  public deleteSection(id: number): Observable<boolean> {
+    return of(true);
+  }
 }

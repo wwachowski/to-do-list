@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { MaterialModule } from 'src/app/materials/material/material.module';
+import { ConfirmDialogModule } from 'src/app/shared/confirm-dialog/confirm-dialog.module';
 import { HomeComponent } from './home.component';
 import { TodosWeekComponent } from 'src/app/components/todos-week/todos-week.component';
 import { TodoCardComponent } from 'src/app/components/todo-card/todo-card.component';
@@ -28,7 +29,8 @@ import { TodoViewConfigService } from 'src/app/services/todo-view-config.service
     HomeRoutingModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ConfirmDialogModule
   ],
   providers: [
     TodoViewConfigService

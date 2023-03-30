@@ -1,7 +1,12 @@
 <div class="grid">
     <div class="column" *ngFor="let day of wrappedTodoList;let i=index">
         <span class="weekday">{{weekDayNames[i]}}</span>
-        <app-todo-card [todo]="todo" *ngFor="let todo of wrappedTodoList[i]"
-            (click)="displayDialog(todo)"></app-todo-card>
+        <div class="card-wrapper" *ngFor="let todo of wrappedTodoList[i]">
+            <app-todo-card [todo]="todo" (click)="displayDialog(todo)"></app-todo-card>
+            <div class="icon-container">
+                <mat-icon class="icon-check icon">check_circle_outline</mat-icon>
+                <mat-icon class="icon-del icon" (click)="onDelete(todo.id)">highlight_off</mat-icon>
+            </div>
+        </div>
     </div>
 </div>

@@ -11,6 +11,7 @@
         {{section.title}}
       </mat-checkbox>
       <mat-icon [matMenuTriggerFor]="menuTrigger" [matMenuTriggerData]="{section: section}">mode_edit</mat-icon>
+      <mat-icon class="icon-delete" (click)="onDelete(section.id!)">delete</mat-icon>
     </div>
 
     <button mat-button [matMenuTriggerFor]="menuTrigger" #menuTriggerRef="matMenuTrigger"><mat-icon>add</mat-icon>New section</button>

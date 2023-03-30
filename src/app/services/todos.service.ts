@@ -22,7 +22,8 @@ export class TodosService {
     TODOS.push(todo);
   }
 
-  public delete(todoId: number): void {
+  public delete(todoId: number): Observable<boolean> {
     TODOS.filter(todo => todo.id !== todoId);
+    return of(true);
   }
 }

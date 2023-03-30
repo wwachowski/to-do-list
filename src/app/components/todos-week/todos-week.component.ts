@@ -8,6 +8,7 @@ import { TodoFormComponent } from '../todo-form/todo-form.component';
 import { TodosService } from 'src/app/services/todos.service';
 import { TodoViewConfigService } from 'src/app/services/todo-view-config.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-todos-week',
@@ -25,7 +26,8 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     private _todos: TodosService,
     private _todoViewConfig: TodoViewConfigService,
-    private _notification: NotificationService) {
+    private _notification: NotificationService,
+    private _confirmDialog: ConfirmDialogService) {
     this._todoViewConfig.config$
       .pipe(takeUntil(this._unsub$))
       .subscribe(newConfig => {
@@ -57,6 +59,38 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         this._notification.notify('Successfully updated Todo!');
         this._updateTodoList(data);
+      })
+  }
+
+  public onDelete(id: number): void {
+    this._confirmDialog.open$({
+      title: 'Delete todo',
+      content: 'Are you sure you want to delete this todo?',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    }).pipe(
+      takeUntil(this._unsub$),
+      catchError(err => {
+        console.error(err);
+        return of(false);
+      })).subscribe(res => {
+        if (!res) return;
+        this._deleteTodo(id);
+      });
+  }
+
+  private _deleteTodo(id: number): void {
+    this._todos.delete(id).pipe(
+      takeUntil(this._unsub$),
+      catchError(err => {
+        console.error(err);
+        return of(false);
+      }))
+      .subscribe(res => {
+        if (!res) {
+          this._notification.notify('Something went wrong');
+          return;
+        } this._notification.notify('Successfully deleted todo');
       })
   }
 

@@ -7,6 +7,7 @@ import { TodoViewConfig } from 'src/app/data/models/todoViewConfig';
 import { UserService } from 'src/app/services/user.service';
 import { TodoViewConfigService } from 'src/app/services/todo-view-config.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-sections-picker',
@@ -17,14 +18,15 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
   @ViewChild('menuTriggerRef') menu!: MatMenuTrigger;
   public sections: Array<Section> = [];
   private _config!: TodoViewConfig;
-  private unsub$ = new Subject<void>();
+  private _unsub$ = new Subject<void>();
 
   constructor(
     private _user: UserService,
     private _todoViewConfig: TodoViewConfigService,
-    private _notification: NotificationService) {
+    private _notification: NotificationService,
+    private _confirmDialog: ConfirmDialogService) {
     this._todoViewConfig.config$
-      .pipe(takeUntil(this.unsub$))
+      .pipe(takeUntil(this._unsub$))
       .subscribe(newConfig => {
         this._config = newConfig;
       });
@@ -37,8 +39,41 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unsub$.next();
-    this.unsub$.complete();
+    this._unsub$.next();
+    this._unsub$.complete();
+  }
+
+  public onDelete(id: number): void {
+    this._confirmDialog.open$({
+      title: 'Delete section',
+      content: 'Are you sure you want to delete this section?',
+      confirmText: 'Yes, delete',
+      cancelText: 'Cancel'
+    }).pipe(
+      takeUntil(this._unsub$),
+      catchError(err => {
+        console.error(err);
+        return of(false);
+      })).subscribe(res => {
+        if (!res) return;
+        this._deleteSection(id);
+      });
+  }
+
+  private _deleteSection(id: number): void {
+    this._user.deleteSection(id)
+      .pipe(
+        takeUntil(this._unsub$),
+        catchError(err => {
+          console.error(err);
+          return of(false);
+        }))
+      .subscribe(res => {
+        if (!res) {
+          this._notification.notify('Something went wrong');
+          return;
+        } this._notification.notify('Successfully deleted section');
+      })
   }
 
   public onEventEmit(newSection: Section): void {
@@ -48,7 +83,7 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
       ? this._user.updateSection(newSection) : this._user.addSection(newSection);
 
     data$.pipe(
-      takeUntil(this.unsub$),
+      takeUntil(this._unsub$),
       catchError(err => {
         console.error(err);
         return of(false);
@@ -69,7 +104,7 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
     this._todoViewConfig.setConfig(this._config);
     this._user.updateSection(section)
       .pipe(
-        takeUntil(this.unsub$),
+        takeUntil(this._unsub$),
         catchError(err => {
           console.error(err);
           return of(false);
@@ -81,7 +116,7 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
 
   private _getSections(): void {
     this._user.getSections().pipe(
-      takeUntil(this.unsub$),
+      takeUntil(this._unsub$),
       catchError(err => {
         console.error(err);
         return of([]);

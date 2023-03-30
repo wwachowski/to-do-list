@@ -1,25 +1,58 @@
+app-todo-card {
+  position: relative;
+  margin: 7.5px;
+}
+
 .column {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
 
 .weekday {
-    text-align: center;
-    font-weight: 700;
-    font-size: larger;
+  text-align: center;
+  font-weight: 700;
+  font-size: larger;
 }
 
 .column:not(:last-child) {
-    -webkit-box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
-    -moz-box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
-    box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
+  -webkit-box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
+  box-shadow: 3px 3px 10px -8px rgba(66, 68, 90, 1);
 }
 
-app-todo-card {
-    margin: 7.5px;
+.icon {
+  display: none;
+}
+
+.icon-check {
+  &:hover {
+    color: rgb(39, 187, 138);
+  }
+}
+
+.icon-del {
+  &:hover {
+    color: rgb(222, 33, 33);
+  }
+}
+
+.icon-container {
+  position: absolute;
+  top: 22px;
+  right: 5px;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.card-wrapper {
+  position: relative;
+  &:hover mat-icon {
+    display: inline-block;
+  }
 }
