@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { Subject, catchError, of, takeUntil } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -14,14 +15,15 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TodoFormComponent implements OnInit, OnDestroy {
   public todoForm: FormGroup = this._createTodoForm();
-  public submitted: boolean = false;
+  public isSubmitted: boolean;
   public sections: Section[] = [];
   private _unsub$ = new Subject<void>();
 
   constructor(
     private _dialogRef: MatDialogRef<TodoFormComponent>,
     @Inject(MAT_DIALOG_DATA) public todo: Todo,
-    private _user: UserService) { }
+    private _user: UserService,
+    private _datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this._getSections();
@@ -33,7 +35,7 @@ export class TodoFormComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit(): void {
-    this.submitted = true;
+    this.isSubmitted = true;
     if (this.todoForm.invalid) return;
     this._updateTodo();
     this._dialogRef.close(this.todo);
@@ -46,7 +48,7 @@ export class TodoFormComponent implements OnInit, OnDestroy {
         console.error(err);
         return of([]);
       })
-    ).subscribe(res => this.sections = res);
+    ).subscribe(sections => this.sections = sections);
   }
 
   private _combineDateAndTime(date: Date, timeString: string): Date {
@@ -54,10 +56,7 @@ export class TodoFormComponent implements OnInit, OnDestroy {
   }
 
   private _getTime(): string {
-    const date = this.todo?.date || new Date();
-    const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-    const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    return `${hours}:${minutes}`;
+    return this._datePipe.transform(this.todo?.date || new Date(), 'hh:mm') || '00:00';
   }
 
   private _updateTodo(): void {

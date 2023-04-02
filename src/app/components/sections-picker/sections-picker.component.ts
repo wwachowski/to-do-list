@@ -17,23 +17,18 @@ import { ConfirmDialogService } from 'src/app/shared/confirm-dialog/confirm-dial
 export class SectionsPickerComponent implements OnInit, OnDestroy {
   @ViewChild('menuTriggerRef') menu!: MatMenuTrigger;
   public sections: Array<Section> = [];
-  private _config!: TodoViewConfig;
+  private _config: TodoViewConfig;
   private _unsub$ = new Subject<void>();
 
   constructor(
     private _user: UserService,
     private _todoViewConfig: TodoViewConfigService,
     private _notification: NotificationService,
-    private _confirmDialog: ConfirmDialogService) {
-    this._todoViewConfig.config$
-      .pipe(takeUntil(this._unsub$))
-      .subscribe(newConfig => {
-        this._config = newConfig;
-      });
-  }
+    private _confirmDialog: ConfirmDialogService) { }
 
   ngOnInit(): void {
-    this._getSections();
+    this._initTodoConfig();
+    this._setSections();
     // this._todoViewConfig.setConfig();
     // this.newConfigEvent.emit({ filterSectionsIDs: this._getFilteredIDs() });
   }
@@ -60,6 +55,52 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
       });
   }
 
+  public onSectionEmit(section: Section): void {
+    this.menu.closeMenu();
+
+    const data$: Observable<boolean> = section.id
+      ? this._user.updateSection(section) : this._user.addSection(section);
+
+    data$.pipe(
+      takeUntil(this._unsub$),
+      catchError(err => {
+        console.error(err);
+        return of(false);
+      }))
+      .subscribe(res => {
+        if (res) {
+          this._notification.notify('Successfully updated');
+          this._setSections();
+          return;
+        }
+        this._notification.notify('Something went wrong');
+      });
+  }
+
+  public onCheckboxToggle(section: Section): void {
+    const filteredIDs = this.sections.filter(sect => sect.visible).map(sect => sect.id!);
+    this._config.filterSectionsIDs = filteredIDs;
+    this._todoViewConfig.setConfig(this._config);
+    this._user.updateSection(section)
+      .pipe(
+        takeUntil(this._unsub$),
+        catchError(err => {
+          console.error(err);
+          return of(false);
+        })
+      ).subscribe(_ => {
+        // this.newConfigEvent.emit({ filterSectionsIDs: filteredIDs });
+      });
+  }
+
+  private _initTodoConfig(): void {
+    this._todoViewConfig.config$
+      .pipe(takeUntil(this._unsub$))
+      .subscribe(config => {
+        this._config = config;
+      });
+  }
+
   private _deleteSection(id: number): void {
     this._user.deleteSection(id)
       .pipe(
@@ -76,51 +117,13 @@ export class SectionsPickerComponent implements OnInit, OnDestroy {
       })
   }
 
-  public onEventEmit(newSection: Section): void {
-    this.menu.closeMenu();
-
-    const data$: Observable<boolean> = newSection.id
-      ? this._user.updateSection(newSection) : this._user.addSection(newSection);
-
-    data$.pipe(
-      takeUntil(this._unsub$),
-      catchError(err => {
-        console.error(err);
-        return of(false);
-      }))
-      .subscribe(res => {
-        if (res) {
-          this._notification.notify('Successfully updated');
-          this._getSections();
-          return;
-        }
-        this._notification.notify('Something went wrong');
-      });
-  }
-
-  public onCheckboxToggle(section: Section) {
-    const filteredIDs = this.sections.filter(sect => sect.visible).map(sect => sect.id!);
-    this._config.filterSectionsIDs = filteredIDs;
-    this._todoViewConfig.setConfig(this._config);
-    this._user.updateSection(section)
-      .pipe(
-        takeUntil(this._unsub$),
-        catchError(err => {
-          console.error(err);
-          return of(false);
-        })
-      ).subscribe(_ => {
-        // this.newConfigEvent.emit({ filterSectionsIDs: filteredIDs });
-      });
-  }
-
-  private _getSections(): void {
+  private _setSections(): void {
     this._user.getSections().pipe(
       takeUntil(this._unsub$),
       catchError(err => {
         console.error(err);
         return of([]);
       })
-    ).subscribe(res => this.sections = res);
+    ).subscribe(sections => this.sections = sections);
   }
 }

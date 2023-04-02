@@ -27,16 +27,10 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
     private _todos: TodosService,
     private _todoViewConfig: TodoViewConfigService,
     private _notification: NotificationService,
-    private _confirmDialog: ConfirmDialogService) {
-    this._todoViewConfig.config$
-      .pipe(takeUntil(this._unsub$))
-      .subscribe(newConfig => {
-        this.todoViewConfig = newConfig;
-        this._configureTodoList();
-      });
-  }
+    private _confirmDialog: ConfirmDialogService) { }
 
   ngOnInit(): void {
+    this._initTodoConfig();
     this._configureTodoList();
   }
 
@@ -159,5 +153,14 @@ export class TodosWeekComponent implements OnInit, OnDestroy {
 
   private _getWeekDayIndex(date: Date): number {
     return date.getDay() - 1 >= 0 ? date.getDay() - 1 : 6;
+  }
+
+  private _initTodoConfig(): void {
+    this._todoViewConfig.config$
+      .pipe(takeUntil(this._unsub$))
+      .subscribe(newConfig => {
+        this.todoViewConfig = newConfig;
+        this._configureTodoList();
+      });
   }
 }

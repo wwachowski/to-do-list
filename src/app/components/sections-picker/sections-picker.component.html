@@ -18,7 +18,7 @@
 
     <mat-menu #menuTrigger="matMenu">
       <ng-template matMenuContent let-section="section">
-        <app-section-menu (newSectionEvent)="onEventEmit($event)" [section]="section"></app-section-menu>
+        <app-section-menu (newSectionEvent)="onSectionEmit($event)" [section]="section"></app-section-menu>
       </ng-template>
     </mat-menu>
 
